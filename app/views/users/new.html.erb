@@ -1,0 +1,98 @@
+<nav class="navbar has-background-dark" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item has-text-white" href="<%= root_path %>">
+      Home
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <% if current_user %>
+            <%= button_to "Log out", logout_path, method: "delete", class: 'button is-primary' %>
+          <% else %>
+            <%= link_to "Login", 'login', class: 'button is-primary' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container.is-max-widescreen">
+
+  <section class="section is-medium">
+    <div class="card">
+      <div class="card-content">
+        <div class="content">
+          <h1 class="title has-text-centered has-text-white">Sign up</h1>
+
+          <%= form_for(@user) do |f| %>
+
+            <div class="field">
+              <label class="label has-text-white">First Name</label>
+              <div class="control has-icons-left">
+                <%= f.text_field :first_name, :placeholder => "First Name", class: "input" %>
+                <span class="icon is-small is-left">
+                  <i class="fas fa-user"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label has-text-white">Last Name</label>
+              <div class="control has-icons-left">
+                <%= f.text_field :last_name, :placeholder => "Last Name", class: "input" %>
+                <span class="icon is-small is-left">
+                  <i class="fas fa-user"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label has-text-white">Email</label>
+              <div class="control has-icons-left">
+                <%= f.email_field :email, :placeholder => "Email", class: "input" %>
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label has-text-white">Password</label>
+              <div class="control has-icons-left">
+                <%= f.password_field :password, :placeholder => "Password", class: "input" %>
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label has-text-white">Confirm Password</label>
+              <div class="control has-icons-left">
+                <%= f.password_field :password_confirmation, :placeholder => "Confirm Password", class: "input" %>
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <%= f.submit "Create an Account", class: "button is-primary" %>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<footer class="footer has-background-dark">
+  <div class="content has-text-centered">
+    <p class="has-text-white">© <%= Time.now.year %> Todos os direitos reservados</p>
+  </div>
+</footer>
+</div>

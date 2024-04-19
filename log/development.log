@@ -1,0 +1,555 @@
+  [1m[35m (351.8ms)[0m  [1m[35mCREATE DATABASE "wesley_dev" ENCODING = 'unicode'[0m
+  [1m[35m (253.9ms)[0m  [1m[35mCREATE DATABASE "wesley_test" ENCODING = 'unicode'[0m
+  [1m[35m (21.8ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (5.0ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3256418132478999810)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (2.5ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (2.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2024-04-19 02:20:20.038298', '2024-04-19 02:20:20.038302') RETURNING "key"[0m
+Migrating to CreateArticles (20240416134211)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (10.4ms)[0m  [1m[35mCREATE TABLE "articles" ("id" bigserial primary key, "title" character varying, "body" text, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240416134211') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateComments (20240416142640)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (10.1ms)[0m  [1m[35mCREATE TABLE "comments" ("id" bigserial primary key, "commenter" character varying, "body" text, "article_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_3bf61a60d3"
+FOREIGN KEY ("article_id")
+  REFERENCES "articles" ("id")
+)[0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE INDEX "index_comments_on_article_id" ON "comments" ("article_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240416142640') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddStatusToArticles (20240416145314)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (2.1ms)[0m  [1m[35mALTER TABLE "articles" ADD "status" character varying[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240416145314') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddStatusToComments (20240416145322)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (3.1ms)[0m  [1m[35mALTER TABLE "comments" ADD "status" character varying[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240416145322') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateUsers (20240416190930)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.5ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "first_name" character varying, "last_name" character varying, "email" character varying, "password_digest" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240416190930') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to RemoveStatusFromArticles (20240417183250)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (3.0ms)[0m  [1m[35mALTER TABLE "articles" DROP COLUMN "status"[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240417183250') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to RemoveStatusFromComments (20240417183258)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.3ms)[0m  [1m[35mALTER TABLE "comments" DROP COLUMN "status"[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240417183258') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddServiceNameToActiveStorageBlobs (20240419000520)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240419000520') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateActiveStorageVariantRecords (20240419000521)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240419000521') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to RemoveNotNullOnActiveStorageBlobsChecksum (20240419000522)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20240419000522') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_advisory_unlock(3256418132478999810)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/" for ::1 at 2024-04-18 23:20:40 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (2.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (2.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mCACHE Article Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/views/articles/index.html.erb:45
+  [1m[36mArticle Load (0.2ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:48
+  Rendered articles/index.html.erb within layouts/application (Duration: 36.7ms | Allocations: 5669)
+  Rendered layout layouts/application.html.erb (Duration: 1092.1ms | Allocations: 102503)
+Completed 200 OK in 1711ms (Views: 1169.6ms | ActiveRecord: 36.1ms | Allocations: 127435)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:24:50 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (24.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mCACHE Article Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/views/articles/index.html.erb:45
+  [1m[36mArticle Load (1.7ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:48
+  Rendered articles/index.html.erb within layouts/application (Duration: 848.8ms | Allocations: 12234)
+  Rendered layout layouts/application.html.erb (Duration: 865.7ms | Allocations: 13324)
+Completed 200 OK in 966ms (Views: 874.8ms | ActiveRecord: 26.6ms | Allocations: 14063)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:25:43 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mCACHE Article Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/views/articles/index.html.erb:45
+  [1m[36mArticle Load (0.4ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:48
+  Rendered articles/index.html.erb within layouts/application (Duration: 27.4ms | Allocations: 3846)
+  Rendered layout layouts/application.html.erb (Duration: 72.5ms | Allocations: 19439)
+Completed 200 OK in 363ms (Views: 313.2ms | ActiveRecord: 15.3ms | Allocations: 22611)
+
+
+Started GET "/articles/new" for ::1 at 2024-04-18 23:26:31 -0300
+Processing by ArticlesController#new as HTML
+Redirected to http://localhost:3000/login
+Filter chain halted as :require_user rendered or redirected
+Completed 302 Found in 12ms (ActiveRecord: 0.0ms | Allocations: 496)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:26:31 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 62.6ms | Allocations: 1200)
+  Rendered layout layouts/application.html.erb (Duration: 68.6ms | Allocations: 2297)
+Completed 200 OK in 85ms (Views: 77.4ms | ActiveRecord: 0.0ms | Allocations: 2785)
+
+
+Started POST "/" for ::1 at 2024-04-18 23:26:46 -0300
+  
+ActionController::RoutingError (No route matches [POST] "/"):
+  
+Started GET "/" for ::1 at 2024-04-18 23:26:47 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (6.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mCACHE Article Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/views/articles/index.html.erb:45
+  [1m[36mArticle Load (0.4ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:48
+  Rendered articles/index.html.erb within layouts/application (Duration: 8.4ms | Allocations: 2425)
+  Rendered layout layouts/application.html.erb (Duration: 34.9ms | Allocations: 4355)
+Completed 200 OK in 51ms (Views: 35.9ms | ActiveRecord: 6.6ms | Allocations: 6058)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:30:19 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (0.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mCACHE Article Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/views/articles/index.html.erb:45
+  [1m[36mArticle Load (1.6ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:48
+  Rendered articles/index.html.erb within layouts/application (Duration: 59.5ms | Allocations: 3854)
+  Rendered layout layouts/application.html.erb (Duration: 167.9ms | Allocations: 19444)
+Completed 200 OK in 526ms (Views: 178.8ms | ActiveRecord: 18.8ms | Allocations: 22592)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:30:29 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mCACHE Article Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/views/articles/index.html.erb:45
+  [1m[36mArticle Load (0.4ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:48
+  Rendered articles/index.html.erb within layouts/application (Duration: 11.2ms | Allocations: 2372)
+  Rendered layout layouts/application.html.erb (Duration: 15.1ms | Allocations: 3461)
+Completed 200 OK in 20ms (Views: 15.5ms | ActiveRecord: 0.9ms | Allocations: 4183)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:30:42 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mCACHE Article Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/views/articles/index.html.erb:45
+  [1m[36mArticle Load (0.2ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:48
+  Rendered articles/index.html.erb within layouts/application (Duration: 14.4ms | Allocations: 3919)
+  Rendered layout layouts/application.html.erb (Duration: 51.0ms | Allocations: 19354)
+Completed 200 OK in 168ms (Views: 58.8ms | ActiveRecord: 3.6ms | Allocations: 22495)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:30:57 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mCACHE Article Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/views/articles/index.html.erb:45
+  [1m[36mArticle Load (0.3ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:48
+  Rendered articles/index.html.erb within layouts/application (Duration: 11.5ms | Allocations: 3882)
+  Rendered layout layouts/application.html.erb (Duration: 58.4ms | Allocations: 19390)
+Completed 200 OK in 119ms (Views: 63.6ms | ActiveRecord: 1.6ms | Allocations: 22629)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:32:37 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mArticle Load (2.4ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:44
+  Rendered articles/index.html.erb within layouts/application (Duration: 51.2ms | Allocations: 3327)
+  Rendered layout layouts/application.html.erb (Duration: 127.4ms | Allocations: 18785)
+Completed 200 OK in 750ms (Views: 136.0ms | ActiveRecord: 23.9ms | Allocations: 21929)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:34:08 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (0.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mArticle Load (0.4ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:44
+  Rendered articles/index.html.erb within layouts/application (Duration: 55.9ms | Allocations: 3336)
+  Rendered layout layouts/application.html.erb (Duration: 244.5ms | Allocations: 18810)
+Completed 200 OK in 477ms (Views: 257.0ms | ActiveRecord: 18.6ms | Allocations: 21942)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:34:20 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (2.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mArticle Load (0.3ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:44
+  Rendered articles/index.html.erb within layouts/application (Duration: 33.4ms | Allocations: 1984)
+  Rendered layout layouts/application.html.erb (Duration: 49.0ms | Allocations: 3077)
+Completed 200 OK in 86ms (Views: 63.6ms | ActiveRecord: 3.0ms | Allocations: 3799)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:34:31 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 7.0ms | Allocations: 804)
+  Rendered layout layouts/application.html.erb (Duration: 12.7ms | Allocations: 1900)
+Completed 200 OK in 25ms (Views: 19.9ms | ActiveRecord: 0.0ms | Allocations: 2385)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:36:50 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (1.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mArticle Load (0.8ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:56
+  Rendered articles/index.html.erb within layouts/application (Duration: 136.1ms | Allocations: 18563)
+  Rendered layout layouts/application.html.erb (Duration: 141.3ms | Allocations: 19568)
+Completed 200 OK in 666ms (Views: 153.9ms | ActiveRecord: 26.4ms | Allocations: 22718)
+
+
+Started GET "/users" for ::1 at 2024-04-18 23:39:09 -0300
+  
+AbstractController::ActionNotFound (The action 'index' could not be found for UsersController):
+  
+actionpack (7.1.3.2) lib/abstract_controller/base.rb:155:in `process'
+actionview (7.1.3.2) lib/action_view/rendering.rb:40:in `process'
+actionpack (7.1.3.2) lib/action_controller/metal.rb:227:in `dispatch'
+actionpack (7.1.3.2) lib/action_controller/metal.rb:309:in `dispatch'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:49:in `dispatch'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:32:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:51:in `block in serve'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:131:in `block in find_routes'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:124:in `each'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:124:in `find_routes'
+actionpack (7.1.3.2) lib/action_dispatch/journey/router.rb:32:in `serve'
+actionpack (7.1.3.2) lib/action_dispatch/routing/route_set.rb:882:in `call'
+rack (3.0.10) lib/rack/tempfile_reaper.rb:20:in `call'
+rack (3.0.10) lib/rack/etag.rb:29:in `call'
+rack (3.0.10) lib/rack/conditional_get.rb:31:in `call'
+rack (3.0.10) lib/rack/head.rb:15:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/http/permissions_policy.rb:36:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/http/content_security_policy.rb:33:in `call'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:272:in `context'
+rack-session (2.0.0) lib/rack/session/abstract/id.rb:266:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/cookies.rb:689:in `call'
+activerecord (7.1.3.2) lib/active_record/migration.rb:655:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+activesupport (7.1.3.2) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/callbacks.rb:28:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/actionable_exceptions.rb:16:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:29:in `call'
+web-console (4.2.1) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.2.1) lib/web_console/middleware.rb:28:in `block in call'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (7.1.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (7.1.3.2) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:135:in `block in tagged'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:39:in `tagged'
+activesupport (7.1.3.2) lib/active_support/tagged_logging.rb:135:in `tagged'
+activesupport (7.1.3.2) lib/active_support/broadcast_logger.rb:240:in `method_missing'
+railties (7.1.3.2) lib/rails/rack/logger.rb:24:in `call'
+sprockets-rails (3.4.2) lib/sprockets/rails/quiet_assets.rb:13:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/remote_ip.rb:92:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/request_id.rb:28:in `call'
+rack (3.0.10) lib/rack/method_override.rb:28:in `call'
+rack (3.0.10) lib/rack/runtime.rb:24:in `call'
+activesupport (7.1.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:59:in `block in call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:24:in `collect_events'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/server_timing.rb:58:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/static.rb:25:in `call'
+rack (3.0.10) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.1.3.2) lib/action_dispatch/middleware/host_authorization.rb:141:in `call'
+railties (7.1.3.2) lib/rails/engine.rb:536:in `call'
+puma (6.4.2) lib/puma/configuration.rb:272:in `call'
+puma (6.4.2) lib/puma/request.rb:100:in `block in handle_request'
+puma (6.4.2) lib/puma/thread_pool.rb:378:in `with_force_shutdown'
+puma (6.4.2) lib/puma/request.rb:99:in `handle_request'
+puma (6.4.2) lib/puma/server.rb:464:in `process_client'
+puma (6.4.2) lib/puma/server.rb:245:in `block in run'
+puma (6.4.2) lib/puma/thread_pool.rb:155:in `block in spawn_thread'
+Started GET "/login" for ::1 at 2024-04-18 23:40:11 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 64.3ms | Allocations: 866)
+  Rendered layout layouts/application.html.erb (Duration: 130.9ms | Allocations: 16456)
+Completed 200 OK in 177ms (Views: 160.0ms | ActiveRecord: 0.0ms | Allocations: 17379)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:41:37 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (1.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mArticle Load (0.3ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:56
+  Rendered articles/index.html.erb within layouts/application (Duration: 94.8ms | Allocations: 18578)
+  Rendered layout layouts/application.html.erb (Duration: 102.6ms | Allocations: 19588)
+Completed 200 OK in 231ms (Views: 116.8ms | ActiveRecord: 27.2ms | Allocations: 22736)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:41:46 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 3.7ms | Allocations: 811)
+  Rendered layout layouts/application.html.erb (Duration: 10.8ms | Allocations: 1910)
+Completed 200 OK in 195ms (Views: 13.9ms | ActiveRecord: 0.0ms | Allocations: 2395)
+
+
+Started GET "/signup" for ::1 at 2024-04-18 23:41:52 -0300
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/new.html.erb within layouts/application (Duration: 10.7ms | Allocations: 1275)
+  Rendered layout layouts/application.html.erb (Duration: 15.5ms | Allocations: 2372)
+Completed 200 OK in 300ms (Views: 19.1ms | ActiveRecord: 46.8ms | Allocations: 11753)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:42:18 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 26.4ms | Allocations: 478)
+  Rendered layout layouts/application.html.erb (Duration: 35.4ms | Allocations: 1571)
+Completed 200 OK in 45ms (Views: 39.8ms | ActiveRecord: 0.0ms | Allocations: 1822)
+
+
+Started GET "/signup" for ::1 at 2024-04-18 23:42:21 -0300
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/new.html.erb within layouts/application (Duration: 5.6ms | Allocations: 632)
+  Rendered layout layouts/application.html.erb (Duration: 10.9ms | Allocations: 1725)
+Completed 200 OK in 18ms (Views: 12.7ms | ActiveRecord: 0.0ms | Allocations: 1992)
+
+
+Started POST "/users" for ::1 at 2024-04-18 23:42:46 -0300
+Processing by UsersController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "user"=>{"first_name"=>"wes", "last_name"=>"pad", "email"=>"wtpadilhaa@gmail.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Create an Account"}
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/users_controller.rb:10:in `create'
+  [1m[36mUser Create (21.9ms)[0m  [1m[32mINSERT INTO "users" ("first_name", "last_name", "email", "password_digest", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["first_name", "wes"], ["last_name", "pad"], ["email", "wtpadilhaa@gmail.com"], ["password_digest", "[FILTERED]"], ["created_at", "2024-04-19 02:42:46.992609"], ["updated_at", "2024-04-19 02:42:46.992609"]]
+  ↳ app/controllers/users_controller.rb:10:in `create'
+  [1m[36mTRANSACTION (3.0ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/users_controller.rb:10:in `create'
+Redirected to http://localhost:3000/
+Completed 302 Found in 354ms (ActiveRecord: 25.6ms | Allocations: 3515)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:42:47 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (0.8ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/application_controller.rb:7:in `current_user'
+  [1m[36mArticle Load (0.2ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:56
+  Rendered articles/index.html.erb within layouts/application (Duration: 196.6ms | Allocations: 12199)
+  Rendered layout layouts/application.html.erb (Duration: 203.5ms | Allocations: 12905)
+Completed 200 OK in 214ms (Views: 204.0ms | ActiveRecord: 2.2ms | Allocations: 13628)
+
+
+Started DELETE "/logout" for ::1 at 2024-04-18 23:43:04 -0300
+Processing by SessionsController#destroy as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]"}
+Redirected to http://localhost:3000/
+Completed 302 Found in 2ms (ActiveRecord: 0.0ms | Allocations: 369)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:43:04 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (1.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mArticle Load (0.3ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:56
+  Rendered articles/index.html.erb within layouts/application (Duration: 12.4ms | Allocations: 2990)
+  Rendered layout layouts/application.html.erb (Duration: 13.9ms | Allocations: 3696)
+Completed 200 OK in 21ms (Views: 16.0ms | ActiveRecord: 1.4ms | Allocations: 4418)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:43:06 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 0.8ms | Allocations: 481)
+  Rendered layout layouts/application.html.erb (Duration: 8.8ms | Allocations: 1574)
+Completed 200 OK in 11ms (Views: 9.9ms | ActiveRecord: 0.0ms | Allocations: 1825)
+
+
+Started POST "/login" for ::1 at 2024-04-18 23:43:15 -0300
+Processing by SessionsController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "session"=>{"email"=>"wtpadilhaa@gmail.com", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[36mUser Load (2.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "wtpadilhaa@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/sessions_controller.rb:7:in `create'
+Redirected to http://localhost:3000/login
+Completed 302 Found in 244ms (ActiveRecord: 2.1ms | Allocations: 752)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:43:16 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 1.1ms | Allocations: 460)
+  Rendered layout layouts/application.html.erb (Duration: 6.6ms | Allocations: 1553)
+Completed 200 OK in 9ms (Views: 7.5ms | ActiveRecord: 0.0ms | Allocations: 1804)
+
+
+Started POST "/login" for ::1 at 2024-04-18 23:43:18 -0300
+Processing by SessionsController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "session"=>{"email"=>"weseupwpc@gmail.com", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "weseupwpc@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/sessions_controller.rb:7:in `create'
+Redirected to http://localhost:3000/login
+Completed 302 Found in 5ms (ActiveRecord: 1.3ms | Allocations: 511)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:43:18 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 1.1ms | Allocations: 463)
+  Rendered layout layouts/application.html.erb (Duration: 5.1ms | Allocations: 1556)
+Completed 200 OK in 7ms (Views: 5.9ms | ActiveRecord: 0.0ms | Allocations: 1807)
+
+
+Started POST "/login" for ::1 at 2024-04-18 23:43:29 -0300
+Processing by SessionsController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "session"=>{"email"=>"wtpadilhaa@gmail.com", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "wtpadilhaa@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/sessions_controller.rb:7:in `create'
+Redirected to http://localhost:3000/login
+Completed 302 Found in 232ms (ActiveRecord: 0.3ms | Allocations: 565)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:43:29 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 1.8ms | Allocations: 487)
+  Rendered layout layouts/application.html.erb (Duration: 5.4ms | Allocations: 1580)
+Completed 200 OK in 8ms (Views: 6.9ms | ActiveRecord: 0.0ms | Allocations: 1831)
+
+
+Started POST "/login" for ::1 at 2024-04-18 23:43:55 -0300
+Processing by SessionsController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "session"=>{"email"=>"weseupwpc@gmail.com", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "weseupwpc@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/sessions_controller.rb:7:in `create'
+Redirected to http://localhost:3000/login
+Completed 302 Found in 5ms (ActiveRecord: 0.3ms | Allocations: 509)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:43:55 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 1.2ms | Allocations: 464)
+  Rendered layout layouts/application.html.erb (Duration: 5.4ms | Allocations: 1562)
+Completed 200 OK in 8ms (Views: 6.3ms | ActiveRecord: 0.0ms | Allocations: 1813)
+
+
+Started POST "/login" for ::1 at 2024-04-18 23:44:02 -0300
+Processing by SessionsController#create as HTML
+  Parameters: {"authenticity_token"=>"[FILTERED]", "session"=>{"email"=>"wtpadilhaa@gmail.com", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "wtpadilhaa@gmail.com"], ["LIMIT", 1]]
+  ↳ app/controllers/sessions_controller.rb:7:in `create'
+Redirected to http://localhost:3000/login
+Completed 302 Found in 234ms (ActiveRecord: 0.3ms | Allocations: 565)
+
+
+Started GET "/login" for ::1 at 2024-04-18 23:44:02 -0300
+Processing by SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering sessions/new.html.erb within layouts/application
+  Rendered sessions/new.html.erb within layouts/application (Duration: 2.9ms | Allocations: 466)
+  Rendered layout layouts/application.html.erb (Duration: 6.2ms | Allocations: 1563)
+Completed 200 OK in 8ms (Views: 6.9ms | ActiveRecord: 0.0ms | Allocations: 1814)
+
+
+Started GET "/" for ::1 at 2024-04-18 23:44:08 -0300
+Processing by ArticlesController#index as HTML
+  [1m[36mArticle Count (0.6ms)[0m  [1m[34mSELECT COUNT(*) FROM "articles"[0m
+  ↳ app/controllers/articles_controller.rb:8:in `index'
+  Rendering layout layouts/application.html.erb
+  Rendering articles/index.html.erb within layouts/application
+  [1m[36mArticle Load (0.2ms)[0m  [1m[34mSELECT "articles".* FROM "articles" LIMIT $1 OFFSET $2[0m  [["LIMIT", 3], ["OFFSET", 0]]
+  ↳ app/views/articles/index.html.erb:56
+  Rendered articles/index.html.erb within layouts/application (Duration: 16.2ms | Allocations: 2979)
+  Rendered layout layouts/application.html.erb (Duration: 17.7ms | Allocations: 3685)
+Completed 200 OK in 25ms (Views: 18.1ms | ActiveRecord: 0.8ms | Allocations: 4407)
+
+
+Started GET "/signup" for ::1 at 2024-04-18 23:44:10 -0300
+Processing by UsersController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering users/new.html.erb within layouts/application
+  Rendered users/new.html.erb within layouts/application (Duration: 4.0ms | Allocations: 629)
+  Rendered layout layouts/application.html.erb (Duration: 7.3ms | Allocations: 1722)
+Completed 200 OK in 15ms (Views: 8.2ms | ActiveRecord: 0.0ms | Allocations: 1989)
+
+

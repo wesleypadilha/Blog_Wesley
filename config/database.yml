@@ -1,0 +1,26 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: wesley_dev
+  username: postgres
+  password: 8763ggtAhh
+  host: localhost
+
+test:
+  <<: *default
+  database: wesley_test
+  username: postgres
+  password: 8763ggtAhh
+  host: localhost
+
+production:
+  <<: *default
+  database: wesley_production
+  username: postgres
+  password: 8763ggtAhh
+  host: localhost

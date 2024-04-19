@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wesley's Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+  <script src="https://kit.fontawesome.com/ab398cb506.js" crossorigin="anonymous"></script>
+</head>
+<body class="has-background-dark has-text-white">
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="<%= root_path %>">
+      <h1 class="title">Welcome to Wesley's Blog</h1>
+    </a>
+  </div>
+
+  <div class="navbar-menu" style="display: flex; justify-content: center; flex-grow: 1;">
+    <% if current_user %>
+      <p class="navbar-item subtitle">Hello, <%= current_user.first_name %>!</p>
+    <% else %>
+      <p class="navbar-item subtitle">Hello!</p>
+    <% end %>
+  </div>
+
+  <div class="navbar-end">
+    <div class="navbar-item">
+      <div class="buttons">
+        <% if current_user %>
+          <%= button_to "Log out", logout_path, method: "delete", class: 'button is-primary' %>
+        <% else %>
+          <%= link_to "Login", 'login', class: 'button is-primary' %>
+          <%= link_to "Sign up", 'signup', class: 'button is-secondary' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div class="columns">
+    <div class="column is-two-thirds is-offset-2">
+      <button class="card js-modal-trigger mb-5" data-target="modal-js-example">
+        <div class="card-content has-text-centered">
+          <span class="icon is-large">
+            <i class="fas fa-plus fa-3x"></i>
+          </span>
+          <p class="title is-4">Create new post</p>
+        </div>
+      </button>
+
+      <h1 class="title is-2 has-text-centered">Articles</h1>
+
+      <% @articles.each do |article| %>
+        <div class="card mb-4">
+          <div class="card-content">
+            <p class="title"><%= link_to article.title, article %></p>
+            <p class="subtitle"><%= article.body.split("\n").first %></p>
+            <p><strong>Author:</strong> <%= article.user.first_name %> <%= article.user.last_name %></p>
+            <p><strong>Published:</strong> <%= article.created_at.strftime("%B %d, %Y") %></p>
+          </div>
+        </div>
+      <% end %>
+
+      <%== pagy_nav(@pagy, ) %>
+    </div>
+  </div>
+</div>
+
+<div id="modal-js-example" class="modal">
+  <div class="modal-background"></div>
+
+  <div class="modal-content">
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Add new post</p>
+      </header>
+      <section class="modal-card-body">
+        <%= form_with model: @article do |form| %>
+          <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+              <%= form.text_field :title, class: "input" %>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Body</label>
+            <div class="control">
+              <%= form.text_area :body, class: "textarea" %>
+            </div>
+          </div>
+      </section>
+      <footer class="modal-card-foot">
+        <div class="buttons">
+          <%= form.submit "Post", class: "button is-primary" %>
+          <button class="button is-danger" onclick="closeModal()">Cancel</button>
+        </div>
+      </footer>
+      <% end %>
+    </div>
+    <button class="modal-close is-large" aria-label="close" onclick="closeModal()"></button>
+  </div>
+</div>
+
+<footer class="footer has-background-dark has-text-centered has-text-white mt-6">
+  <div class="content">
+    <p>All rights reserved. &copy; <%= Time.now.year %> Wesley's Blog</p>
+  </div>
+</footer>
+
+<script>
+  function closeModal() {
+    var modal = document.getElementById('modal-js-example');
+    modal.classList.remove('is-active');
+  }
+</script>
+
+</body>
+</html>
